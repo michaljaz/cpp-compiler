@@ -91,27 +91,6 @@ function fullscreen() {
     elem.msRequestFullscreen();
   }
 }
-function setCookie(cname,cvalue,exdays) {
-  var d = new Date();
-  d.setTime(d.getTime() + (exdays*24*60*60*1000));
-  var expires = "expires=" + d.toGMTString();
-  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-function getCookie(cname) {
-  var name = cname + "=";
-  var decodedCookie = decodeURIComponent(document.cookie);
-  var ca = decodedCookie.split(';');
-  for(var i = 0; i < ca.length; i++) {
-    var c = ca[i];
-    while (c.charAt(0) == ' ') {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
 
 function saveCode(code){
 	localStorage.setItem("code",code)
@@ -127,7 +106,7 @@ function saveInput(input){
 }
 
 
-if(getCode()==""){
+if(getCode()==null){
 	editor.setValue(`#include <bits/stdc++.h>
 using namespace std;
 
@@ -145,16 +124,10 @@ int main(){
 }
 txta.value=getInput()
 
-
-function save(){
-	
-	var code=editor.getValue();
-	saveCode(code)
-	saveInput(txta.value)
-}
 setInterval(function (){
-	save()
-})
+	saveCode(editor.getValue())
+	saveInput(txta.value)
+},10)
 function run(){
 	$.get("/compile/",{
 		script:editor.getValue(),
