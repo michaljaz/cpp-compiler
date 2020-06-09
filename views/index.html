@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kompilator C++</title>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="favicon.png">
+	<!-- Font Awesome -->
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+	<!-- Google Fonts -->
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap">
+	<!-- Bootstrap core CSS -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Material Design Bootstrap -->
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.0/css/mdb.min.css" rel="stylesheet">
+	<!-- JQuery -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	<!-- Bootstrap tooltips -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.4/umd/popper.min.js"></script>
+	<!-- Bootstrap core JavaScript -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.0/js/bootstrap.min.js"></script>
+	<!-- MDB core JavaScript -->
+	<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdbootstrap/4.19.0/js/mdb.min.js"></script>
+	<style>
+body{
+	background:#0b3817;
+}
+
+	</style>
+</head>
+<body>
+	<div class="row m-0">
+		<div class="col-7 p-3">
+			<h1 class="text-light">Kompilator C++</h1>
+			<style type="text/css" media="screen">
+			   	#editor {
+			       	height:400px;
+			   	}
+			   	.in{
+			   		background:#272822;
+			   		color:white;
+			   		border:0px;
+			   		width:100%;
+			   		padding:10px;
+			   	}
+			   	:focus{
+			   		outline:0px;
+			   	};
+			</style>
+			<script src="src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+			<div id="editor"></div>
+			<hr>
+			<textarea placeholder="Wejście" class="in" rows=5 id="txta"></textarea><br>
+			<div class="btn-group float-right" role="group" aria-label="Basic example">
+			  	<button type="button" class="btn btn-success" onclick="run()">
+			  		Uruchom!
+			  	</button>
+			  	<button type="button" class="btn btn-primary" onclick="fullscreen()">
+			  		<i class="fas fa-arrows-alt"></i>
+			  	</button>
+			  	
+			</div><br>
+		</div>
+		<div class="col-5 p-3" style="margin-top:55px;">
+			<textarea placeholder="Rezultat" class="in" rows=16 id="txta2" readonly></textarea><br>
+			<hr>
+			<div class="text-light">
+				Skrypt automatycznie się zapisuje!
+			</div>
+		</div>
+	</div>
+	<script>
+var editor = ace.edit("editor");
+editor.setTheme("ace/theme/monokai");
+editor.session.setMode("ace/mode/c_cpp");
+editor.clearSelection();
+editor.setOptions({
+  // fontFamily: "tahoma",
+  fontSize: "15pt",
+  tabSize: 2
+});
+elem=document.querySelector("html")
+function fullscreen() {
+  if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+}
+function setCookie(cname,cvalue,exdays) {
+  var d = new Date();
+  d.setTime(d.getTime() + (exdays*24*60*60*1000));
+  var expires = "expires=" + d.toGMTString();
+  document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+}
+function getCookie(cname) {
+  var name = cname + "=";
+  var decodedCookie = decodeURIComponent(document.cookie);
+  var ca = decodedCookie.split(';');
+  for(var i = 0; i < ca.length; i++) {
+    var c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
+
+function saveCode(code){
+	localStorage.setItem("code",code)
+}
+function getCode(){
+	return localStorage.getItem("code")
+}
+function getInput(){
+	return localStorage.getItem("input")
+}
+function saveInput(input){
+	localStorage.setItem("input",input)
+}
+
+
+if(getCode()==""){
+	editor.setValue(`#include <bits/stdc++.h>
+using namespace std;
+
+int main(){
+	ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
+	//Twój kod
+
+
+	return 0;
+}`,10)
+	editor.clearSelection();
+}else{
+	editor.setValue(getCode())
+	editor.clearSelection();
+}
+txta.value=getInput()
+
+
+function save(){
+	
+	var code=editor.getValue();
+	saveCode(code)
+	saveInput(txta.value)
+}
+setInterval(function (){
+	save()
+})
+function run(){
+	$.get("/compile/",{
+		script:editor.getValue(),
+		input:txta.value
+	},function (r){
+		if(r.type=="success"){
+			//
+		}else if(r.type="error"){
+			//
+		}
+		txta2.value=r.out
+		console.log(r)
+	})
+}
+
+	</script>
+</body>
+</html>
