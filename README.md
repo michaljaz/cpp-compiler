@@ -11,7 +11,7 @@ To jest prosty kompilator języka C++<br>
 	Działa w przeglądarce
 </li>
 <br>
-<img src="screenshot.png"
+<img src="src/screenshot.png"
      alt="Screenshot"
      style="float: left; margin-right: 10px;" />
 
@@ -20,5 +20,6 @@ To jest prosty kompilator języka C++<br>
 ```bash
 git clone https://github.com/michaljaz/cpp-compiler
 cd cpp-compiler
-node start.js
+npm install
+npm start
 ```
