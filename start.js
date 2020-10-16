@@ -44,10 +44,10 @@ app.get('/compile', function(req, res){
 		});
 	});
 
-	
+
 	console.log(req.query.script,req.query.input)
-	
-	
+
+
 })
 app.listen(port, function (){
 	opn(`http://localhost:${port}/`)
